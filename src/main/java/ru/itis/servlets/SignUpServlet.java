@@ -1,6 +1,7 @@
 package ru.itis.servlets;
 
 import ru.itis.dto.SignUpForm;
+import ru.itis.repository.AccountRepository;
 import ru.itis.repository.SignUpService;
 
 import javax.servlet.ServletConfig;
@@ -21,9 +22,11 @@ import java.util.Date;
 public class SignUpServlet extends HttpServlet {
 
     SignUpService signUpService;
+    AccountRepository accountRepository;
 
     public void init(ServletConfig config){
         signUpService = (SignUpService) config.getServletContext().getAttribute("signService");
+        accountRepository = (AccountRepository) config.getServletContext().getAttribute("accountRep");
     }
 
     @Override
@@ -52,8 +55,12 @@ public class SignUpServlet extends HttpServlet {
         form.setPassword(request.getParameter("password"));
 
         try {
-            signUpService.signUp(form);
-            response.sendRedirect("/signIn");
+            if(accountRepository.userExists(form.getUsername())){
+                response.sendRedirect("/userExists");
+            }else{
+                signUpService.signUp(form);
+                response.sendRedirect("/signIn");
+            }
         } catch (SQLException e){
             response.sendRedirect("/signUp");
             throw new RuntimeException(e);

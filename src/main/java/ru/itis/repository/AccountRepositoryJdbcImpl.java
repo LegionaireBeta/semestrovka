@@ -20,8 +20,7 @@ public class AccountRepositoryJdbcImpl implements AccountRepository {
     private static final String SQL_SELECT_ALL = "SELECT * FROM users OFFSET 1";
     private static final String SQL_VIEW_USER = "SELECT * FROM users WHERE username = ?";
     private static final String SQL_DELETE_USER = "DELETE FROM users WHERE user_id = ?";
-    private static final String SQL_SELECT_ID_BY_USERNAME = "SELECT user_id FROM users WHERE username = ?";
-    private static final String SQL_INSERT_UUID = "INSERT INTO logins(id, uuid) VALUES(?, ?)";
+    private static final String SQL_USER_EXISTS = "SELECT COUNT(*) FROM users WHERE username = ?";
 
     private PasswordEncoder passwordEncoder;
 
@@ -106,43 +105,17 @@ public class AccountRepositoryJdbcImpl implements AccountRepository {
     }
 
     @Override
-    public UUID insertUUID(HttpSession session) throws SQLException {
+    public Boolean userExists(String username) throws SQLException {
         Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_USER_EXISTS);
 
-        PreparedStatement preparedStatement1 = connection.prepareStatement(SQL_SELECT_ID_BY_USERNAME);
-        PreparedStatement preparedStatement2 = connection.prepareStatement(SQL_INSERT_UUID);
+        preparedStatement.setString(1, username);
 
-        preparedStatement1.setString(1, session.getAttribute("currentUsername").toString());
-
-        ResultSet resultSet = preparedStatement1.executeQuery();
-
-        Long id = null;
-
-        while (resultSet.next()) {
-            id = resultSet.getLong("user_id");
-        }
-
-        UUID uuid = UUID.randomUUID();
-
-        preparedStatement2.setLong(1, id);
-        preparedStatement2.setObject(2, uuid);
-
-        preparedStatement2.executeUpdate();
-
-        return uuid;
-    }
-
-    @Override
-    public Boolean findUUID(UUID uuid) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM logins WHERE uuid = ?";
-        Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setObject(1, uuid);
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        if (resultSet.next()) {
+        if(resultSet.next()){
             return true;
-        } else {
+        }else {
             return false;
         }
     }

@@ -13,7 +13,6 @@ public interface AccountRepository {
     Boolean login(String username, String password, User user) throws SQLException;
     List selectAll() throws SQLException;
     void deleteUser(Long userId) throws SQLException;
-    UUID insertUUID(HttpSession session) throws SQLException;
-    Boolean findUUID(UUID uuid) throws SQLException;
+    Boolean userExists(String username) throws SQLException;
 
 }
