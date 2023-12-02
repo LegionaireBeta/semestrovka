@@ -82,6 +82,5 @@ public class UserInformationServlet extends HttpServlet {
             response.sendRedirect("/userInformationSettings");
             throw new RuntimeException(e);
         }
-
     }
 }

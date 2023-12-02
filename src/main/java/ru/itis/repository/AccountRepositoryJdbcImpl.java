@@ -5,19 +5,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.itis.model.User;
 
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class AccountRepositoryJdbcImpl implements AccountRepository{
-    
+public class AccountRepositoryJdbcImpl implements AccountRepository {
+
     private DataSource dataSource;
 
     private static final String SQL_INSERT = "INSERT INTO users(first_name, last_name, age, gender, country, city, username, password_hash) VALUES ";
     private static final String SQL_SELECT_ALL = "SELECT * FROM users OFFSET 1";
     private static final String SQL_VIEW_USER = "SELECT * FROM users WHERE username = ?";
     private static final String SQL_DELETE_USER = "DELETE FROM users WHERE user_id = ?";
+    private static final String SQL_SELECT_ID_BY_USERNAME = "SELECT user_id FROM users WHERE username = ?";
+    private static final String SQL_INSERT_UUID = "INSERT INTO logins(id, uuid) VALUES(?, ?)";
 
     private PasswordEncoder passwordEncoder;
 
@@ -43,7 +47,7 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
         preparedStatement.executeUpdate();
     }
 
-    public Boolean login(String username, String password, User user) throws SQLException{
+    public Boolean login(String username, String password, User user) throws SQLException {
         Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(SQL_VIEW_USER);
 
@@ -53,14 +57,14 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
         String userAcc = "";
         String passAcc = "";
 
-        while (resultSet.next()){
+        while (resultSet.next()) {
             userAcc = resultSet.getString("username");
             passAcc = resultSet.getString("password_hash");
         }
 
-        if(userAcc.equals(username) && passwordEncoder.matches(password, passAcc)){
+        if (userAcc.equals(username) && passwordEncoder.matches(password, passAcc)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -74,7 +78,7 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()){
+        while (resultSet.next()) {
             User user = User.builder()
                     .idOfUser(resultSet.getLong("user_id"))
                     .firstNameOfUser(resultSet.getString("first_name"))
@@ -88,7 +92,7 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
 
             result.add(user);
         }
-    return result;
+        return result;
     }
 
     @Override
@@ -100,4 +104,47 @@ public class AccountRepositoryJdbcImpl implements AccountRepository{
 
         preparedStatement.executeUpdate();
     }
+
+    @Override
+    public UUID insertUUID(HttpSession session) throws SQLException {
+        Connection connection = dataSource.getConnection();
+
+        PreparedStatement preparedStatement1 = connection.prepareStatement(SQL_SELECT_ID_BY_USERNAME);
+        PreparedStatement preparedStatement2 = connection.prepareStatement(SQL_INSERT_UUID);
+
+        preparedStatement1.setString(1, session.getAttribute("currentUsername").toString());
+
+        ResultSet resultSet = preparedStatement1.executeQuery();
+
+        Long id = null;
+
+        while (resultSet.next()) {
+            id = resultSet.getLong("user_id");
+        }
+
+        UUID uuid = UUID.randomUUID();
+
+        preparedStatement2.setLong(1, id);
+        preparedStatement2.setObject(2, uuid);
+
+        preparedStatement2.executeUpdate();
+
+        return uuid;
+    }
+
+    @Override
+    public Boolean findUUID(UUID uuid) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM logins WHERE uuid = ?";
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setObject(1, uuid);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.next()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

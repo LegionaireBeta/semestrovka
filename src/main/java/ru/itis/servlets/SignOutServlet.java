@@ -4,10 +4,7 @@ import ru.itis.filter.AuthFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 @WebServlet("/signOut")
@@ -20,6 +17,18 @@ public class SignOutServlet extends HttpServlet {
             AuthFilter authFilter = new AuthFilter();
             authFilter.destroyAuthentication(session);
         }
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("user".equals(cookie.getName())) {
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
+
         response.sendRedirect("/signIn");
     }
 }

@@ -22,7 +22,7 @@ public class AuthFilter implements Filter {
         HttpSession session = request.getSession();
 
         Boolean isAutenticated = false;
-        Boolean sessionExist = session != null;
+        Boolean sessionExist = session != null ;
         Boolean isLoginPage = request.getRequestURI().equals("/signIn");
         Boolean isSignUpPage = request.getRequestURI().equals("/signUp");
 

@@ -111,7 +111,4 @@ public class SettingsRepositoryJdbcImpl implements SettingsRepository{
         preparedStatement.close();
         connection.close();
     }
-
-
-
 }

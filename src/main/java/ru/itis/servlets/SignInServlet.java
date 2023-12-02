@@ -8,10 +8,7 @@ import ru.itis.repository.AccountRepository;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -28,7 +25,26 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/html/signIn.html").forward(request, response);
+        Cookie[] cookies = request.getCookies();
+        String username = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("user".equals(cookie.getName())) {
+                    username = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (username != null) {
+            HttpSession session = request.getSession(true);
+            session.setAttribute("autenticated", true);
+            session.setAttribute("currentUsername", username);
+            response.sendRedirect("/home");
+        } else {
+
+            request.getRequestDispatcher("/html/signIn.html").forward(request, response);
+        }
     }
 
     @Override
@@ -36,6 +52,7 @@ public class SignInServlet extends HttpServlet {
         String accountUsername = request.getParameter("username");
         String accountPassword = request.getParameter("password");
 
+        HttpSession session = request.getSession(true);
 
         User user = User.builder()
                 .usernameOfUser(accountUsername)
@@ -43,18 +60,22 @@ public class SignInServlet extends HttpServlet {
                 .build();
 
         try {
+            if (accountRepository.login(accountUsername, accountPassword, user)) {
 
-
-            if(accountRepository.login(accountUsername, accountPassword, user)){
-                HttpSession session = request.getSession(true);
                 session.setAttribute("autenticated", true);
                 session.setAttribute("currentUsername", accountUsername);
+
+                Cookie userCookie = new Cookie("user", accountUsername);
+
+                userCookie.setMaxAge(30 * 24 * 60 * 60);
+
+                response.addCookie(userCookie);
+
                 response.sendRedirect("/home");
-            }else {
+            } else {
                 response.sendRedirect("/signIn");
             }
-        }catch (SQLException e){
-
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

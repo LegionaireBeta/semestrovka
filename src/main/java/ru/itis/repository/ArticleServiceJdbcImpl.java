@@ -135,6 +135,4 @@ public class ArticleServiceJdbcImpl implements ArticleService{
         preparedStatement.executeUpdate();
 
     }
-
-
 }

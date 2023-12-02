@@ -48,10 +48,6 @@ public class InsertArticleServlet extends HttpServlet {
                 .tag(tagOfPost)
                 .build();
 
-
-
-
-
         try {
             articleService.save(postInfo, session);
             response.sendRedirect("/home");
@@ -59,8 +55,6 @@ public class InsertArticleServlet extends HttpServlet {
             response.sendRedirect("/insertArticle");
             throw new RuntimeException(e);
         }
-
-
     }
 }
 
