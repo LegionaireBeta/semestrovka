@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up | </title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body{
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 2rem;
+            width: 350px;
+            height: 100vw;
+            background-color: white;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        .container h1{
+            margin-top: 0.25rem;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        .inputs{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            width: 90%;
+        }
+        .genders{
+            display:flex;
+            flex-direction: row;
+        }
+
+        .inputs .gender {
+            display: flex;
+            align-items: center;
+            margin-right: 0.25rem;
+        }
+
+        .inputs .gender input[type="radio"] {
+            margin-right: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .inputs .gender input[type="radio"]:checked {
+            background-color: #333;
+        }
+
+        .inputs .gender label {
+            font-size: 1.5rem;
+        }
+
+
+        .inputs label{
+            margin: 0.5rem 0;
+            font-size: 1.5rem;
+            font-family: sans-serif;
+            font-style: italic;
+        }
+
+        .inputs input{
+            padding: 0.25rem .5rem;
+            width: 90%;
+            font-size: 1.5rem;
+            border: .5px solid black;
+            border-radius: 5px;
+            font-family: sans-serif;
+        }
+        button{
+            margin-top: 1rem;
+            width: 70%;
+            height: 35px;
+            background-color: white;
+            font-size: 1.5rem;
+            border: .75px solid black;
+            border-radius: 5px;
+        }
+
+        .container a{
+            margin-bottom: .5rem;
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+    <h1>Sign Up</h1>
+    <form action="signUp" method="post">
+        <div class="inputs">
+            <label>First Name</label>
+            <input name="name" placeholder="Your name">
+        </div>
+        <div class="inputs">
+            <label>Last Name</label>
+            <input name="surname" placeholder="Your surname">
+        </div>
+        <div class="inputs">
+            <label>Age</label>
+            <input type="date" name="age">
+        </div>
+        <div class="inputs genders">
+            <div class="gender">
+                <input type="radio" name="gender" id="male" value="male">
+                <label for="male">Male</label>
+            </div>
+            <div class="gender">
+                <input type="radio" name="gender" id="female" value="female">
+                <label for="female">Female</label>
+            </div>
+        </div>
+        <div class="inputs">
+            <label>Country</label>
+            <input name="country" placeholder="Your country">
+        </div>
+        <div class="inputs">
+            <label>City</label>
+            <input name="city" placeholder="Your City">
+        </div>
+        <div class="inputs">
+            <label>Username</label>
+            <input name="username" placeholder="Your username">
+        </div>
+        <div class="inputs">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Your password">
+        </div>
+        <button type="submit">Sign Up</button>
+    </form>
+    <a href="/signIn">Do you have account?</a>
+</div>
+</body>
+</html>
