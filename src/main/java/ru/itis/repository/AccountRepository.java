@@ -14,5 +14,6 @@ public interface AccountRepository {
     List selectAll() throws SQLException;
     void deleteUser(Long userId) throws SQLException;
     Boolean userExists(String username) throws SQLException;
+    List selectUserInformation(HttpSession session) throws SQLException;
 
 }

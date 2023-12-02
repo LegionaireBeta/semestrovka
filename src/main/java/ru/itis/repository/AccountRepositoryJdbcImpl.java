@@ -120,4 +120,33 @@ public class AccountRepositoryJdbcImpl implements AccountRepository {
         }
     }
 
+    @Override
+    public List selectUserInformation(HttpSession session) throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SQL_VIEW_USER);
+
+        preparedStatement.setString(1, session.getAttribute("currentUsername").toString());
+
+        List<User> result = new ArrayList<>();
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()){
+            User user = User.builder()
+                    .idOfUser(resultSet.getLong("user_id"))
+                    .firstNameOfUser(resultSet.getString("first_name"))
+                    .surnameOfUser(resultSet.getString("last_name"))
+                    .ageOfUser(resultSet.getDate("age"))
+                    .genderOfUser(resultSet.getString("gender"))
+                    .countryOfUser(resultSet.getString("country"))
+                    .cityOfUser(resultSet.getString("city"))
+                    .usernameOfUser(resultSet.getString("username"))
+                    .build();
+
+            result.add(user);
+        }
+        return result;
+    }
+
+
 }

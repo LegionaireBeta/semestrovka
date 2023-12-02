@@ -3,18 +3,15 @@
   Created by IntelliJ IDEA.
   User: VAHABI
   Date: 02/12/2023
-  Time: 01:49
+  Time: 20:30
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <title>Account Informations</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <title>Settings</title>
-
     <style>
-
         *{
             margin: 0;
             padding: 0;
@@ -55,38 +52,29 @@
             color: white;
         }
 
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .informations{
+            display: flex;
+            flex-direction: column;
+            margin-top: 1rem;
+            margin-left: 1rem;
+            padding: 1rem;
+            width: 500px;
+            background-color: #eaeaea;
+            border-radius: 10px;
+        }
+        .informations div{
+            display: flex;
+            flex-direction: row;
+            font-size: 3rem;
+        }
+        .informations .fontId{
+            font-size: 5rem;
+        }
+        .informations div h3{
+            margin-left: 1rem;
+            opacity: .7;
         }
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .trash{
-            cursor: pointer;
-        }
-        .trash .fa-trash{
-            color: #326c9b;
-            transition: .5s;
-        }
-
-        .trash .fa-trash:hover{
-            color: black;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
     </style>
 </head>
 <body>
@@ -131,46 +119,18 @@
 <%
     }
 %>
+<c:forEach items="${userForJsp}" var="user">
+    <div class="informations">
+        <h4 class="fontId">ID : ${user.idOfUser}</h4>
+        <div><h4>Username : </h4><h3>${user.usernameOfUser}</h3></div>
+        <div><h4>First Name : </h4><h3>${user.firstNameOfUser}</h3></div>
+        <div><h4>Surname : </h4><h3>${user.surnameOfUser}</h3></div>
+        <div><h4>Birth : </h4><h3>${user.ageOfUser}</h3></div>
+        <div><h4>Gender : </h4><h3>${user.genderOfUser}</h3></div>
+        <div><h4>Country : </h4><h3>${user.countryOfUser}</h3></div>
+        <div><h4>City : </h4><h3>${user.cityOfUser}</h3></div>
+    </div>
+</c:forEach>
 
-<%
-    String role1 = (String) session.getAttribute("currentUsername");
-    if("admin".equals(role1)){
-%>
-
-<table>
-    <tr>
-        <th>ID</th>
-        <th>USERNAME</th>
-        <th>NAME</th>
-        <th>SURNAME</th>
-        <th>AGE</th>
-        <th>GENDER</th>
-        <th>COUNTRY</th>
-        <th>CITY</th>
-        <th>DELETE</th>
-
-    </tr>
-    <c:forEach items="${usersForJsp}" var="user">
-        <tr>
-            <td>${user.idOfUser}</td>
-            <td>${user.usernameOfUser}</td>
-            <td>${user.firstNameOfUser}</td>
-            <td>${user.surnameOfUser}</td>
-            <td>${user.ageOfUser}</td>
-            <td>${user.genderOfUser}</td>
-            <td>${user.countryOfUser}</td>
-            <td>${user.cityOfUser}</td>
-            <td class="trash"><a href="/deleteUser?idOfUser=${user.idOfUser}&usernameOfUser=${user.usernameOfUser}"><i class="fa-solid fa-trash"></i></a></td>
-        </tr>
-    </c:forEach>
-</table>
-
-<%
-    }else{
-%>
-
-<h1>YOU ARE NOT ADMIN</h1>
-
-<% } %>
 </body>
 </html>

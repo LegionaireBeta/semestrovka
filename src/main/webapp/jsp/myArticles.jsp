@@ -201,7 +201,7 @@
     <c:forEach items="${usernameForJsp}" var="user">
         <div class="right">
             <a href="/signOut">Sign Out</a>
-            <a href="#">${user} <i class="fa-solid fa-crown"></i></a>
+            <a href="/accountInformations">${user} <i class="fa-solid fa-crown"></i></a>
             <a href="#"><img src="/files/3135715.png"></a>
         </div>
     </c:forEach>
@@ -219,7 +219,7 @@
     <c:forEach items="${usernameForJsp}" var="user">
         <div class="right">
             <a href="/signOut">Sign Out</a>
-            <a href="#">${user}</a>
+            <a href="/accountInformations">${user}</a>
             <a href="#"><img src="/files/3135715.png"></a>
         </div>
     </c:forEach>
