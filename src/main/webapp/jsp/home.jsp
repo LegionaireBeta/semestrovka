@@ -151,7 +151,7 @@
 
         .articles .article .bottomOfArticle a i.fa-trash{
             position: absolute;
-            right: 5rem;
+            right: 1rem;
         }
 
 
@@ -247,11 +247,6 @@
                                 if("admin".equals(role)){
                             %>
                             <a href="/deleteArticle?articleId=${article.articleId}"><i class="fa-solid fa-trash"></i></a>
-                            <a href="/savedArticles?articleId=${article.articleId}"><i class="fa-solid fa-plus"></i></a>
-                            <%
-                                }else{
-                            %>
-                            <a href="/savedArticles?articleId=${article.articleId}"><i class="fa-solid fa-plus"></i></a>
                             <%
                                 }
                             %>
